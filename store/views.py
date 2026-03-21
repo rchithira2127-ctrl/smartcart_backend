@@ -12,6 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView 
 from django.contrib.auth import authenticate
 
+
 class ProductListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -21,18 +22,19 @@ class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny   
 
 class CartListCreateView(generics.ListCreateAPIView):
+    queryset = Cart.objects.all()  
     serializer_class = CartSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Cart.objects.filter(user=self.request.user)
+    permission_classes = [AllowAny]   
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
+        serializer.save()   
+class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
